@@ -7,3 +7,8 @@ Software development kit for Creent Production consist of mainly backend SDK. Ba
 
 ## Go TDK
 [Here's](./go/) the tdk as we know it. Collection of standard go package commonly used in Creent Production backend service.
+
+## TODO
+- Add unit test in every package
+- Add example usage in every package
+- Increase coverage 
