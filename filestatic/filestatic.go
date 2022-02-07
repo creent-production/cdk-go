@@ -4,12 +4,12 @@ import "net/http"
 
 // FileSystem custom file system handler
 type FileSystem struct {
-	http.FileSystem
+	Static http.FileSystem
 }
 
 // Open opens file
 func (fs FileSystem) Open(path string) (http.File, error) {
-	f, err := fs.Open(path)
+	f, err := fs.Static.Open(path)
 	if err != nil {
 		return nil, err
 	}
@@ -20,7 +20,7 @@ func (fs FileSystem) Open(path string) (http.File, error) {
 	}
 
 	if s.IsDir() {
-		return fs.Open("upps!")
+		return fs.Static.Open("upps!")
 	}
 
 	return f, nil
