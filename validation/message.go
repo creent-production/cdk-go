@@ -2,6 +2,7 @@ package validation
 
 import (
 	"fmt"
+	"strings"
 )
 
 var (
@@ -16,6 +17,7 @@ var (
 	Lte      = "Must be less than or equal to %s."
 	Lt       = "Must be less than %s."
 	Oneof    = "Must be one of: %s."
+	Eqfield  = "Must be equal to %s."
 )
 
 func SetErrorMessage(ev ErrorValidate) string {
@@ -40,6 +42,8 @@ func SetErrorMessage(ev ErrorValidate) string {
 		return fmt.Sprintf(Lt, ev.Param)
 	case "oneof":
 		return fmt.Sprintf(Oneof, ev.Param)
+	case "eqfield":
+		return fmt.Sprintf(Eqfield, strings.ToLower(ev.Param))
 	}
 	return Default
 }
