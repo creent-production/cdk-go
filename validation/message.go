@@ -18,6 +18,7 @@ var (
 	Lt       = "Must be less than %s."
 	Oneof    = "Must be one of: %s."
 	Eqfield  = "Must be equal to %s."
+	Unique   = "Must be unique."
 )
 
 func SetErrorMessage(ev ErrorValidate) string {
@@ -44,6 +45,8 @@ func SetErrorMessage(ev ErrorValidate) string {
 		return fmt.Sprintf(Oneof, ev.Param)
 	case "eqfield":
 		return fmt.Sprintf(Eqfield, strings.ToLower(ev.Param))
+	case "unique":
+		return Unique
 	}
 	return Default
 }
