@@ -2,6 +2,7 @@ package validation
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 )
 
@@ -42,9 +43,17 @@ func SetErrorMessage(ev ErrorValidate) string {
 	case "lt":
 		return fmt.Sprintf(Lt, ev.Param)
 	case "oneof":
-		return fmt.Sprintf(Oneof, ev.Param)
+		var msg string
+		reg := regexp.MustCompile(`'(.*?)'`)
+		txt := reg.FindAllString(ev.Param, -1)
+		if len(txt) == 0 {
+			msg = strings.Join(strings.Split(ev.Param, " "), ", ")
+		} else {
+			msg = strings.Join(txt, ", ")
+		}
+		return fmt.Sprintf(Oneof, msg)
 	case "eqfield":
-		return fmt.Sprintf(Eqfield, strings.ToLower(ev.Param))
+		return fmt.Sprintf(Eqfield, ToSnakeCase(ev.Param))
 	case "unique":
 		return Unique
 	}
