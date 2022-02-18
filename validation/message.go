@@ -20,6 +20,7 @@ var (
 	Oneof    = "Must be one of: %s."
 	Eqfield  = "Must be equal to %s."
 	Unique   = "Must be unique."
+	Phone    = "Invalid phone number."
 )
 
 func SetErrorMessage(ev ErrorValidate) string {
@@ -35,13 +36,29 @@ func SetErrorMessage(ev ErrorValidate) string {
 	case "len":
 		return fmt.Sprintf(Len, ev.Param)
 	case "gte":
-		return fmt.Sprintf(Gte, ev.Param)
+		msg := ev.Param
+		if len(msg) == 0 {
+			msg = "current time"
+		}
+		return fmt.Sprintf(Gte, msg)
 	case "gt":
-		return fmt.Sprintf(Gt, ev.Param)
+		msg := ev.Param
+		if len(msg) == 0 {
+			msg = "current time"
+		}
+		return fmt.Sprintf(Gt, msg)
 	case "lte":
-		return fmt.Sprintf(Lte, ev.Param)
+		msg := ev.Param
+		if len(msg) == 0 {
+			msg = "current time"
+		}
+		return fmt.Sprintf(Lte, msg)
 	case "lt":
-		return fmt.Sprintf(Lt, ev.Param)
+		msg := ev.Param
+		if len(msg) == 0 {
+			msg = "current time"
+		}
+		return fmt.Sprintf(Lt, msg)
 	case "oneof":
 		var msg string
 		reg := regexp.MustCompile(`'(.*?)'`)
@@ -56,6 +73,8 @@ func SetErrorMessage(ev ErrorValidate) string {
 		return fmt.Sprintf(Eqfield, ToSnakeCase(ev.Param))
 	case "unique":
 		return Unique
+	case "phone":
+		return Phone
 	}
 	return Default
 }

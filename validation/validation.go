@@ -26,6 +26,9 @@ type ErrorValidate struct {
 
 func StructValidate(body interface{}) map[string]interface{} {
 	validate = validator.New()
+	// register all custom validation
+	registerValidation(validate)
+
 	err, data := validate.Struct(body), make([]map[string]interface{}, 0)
 	if err != nil {
 		for _, err := range err.(validator.ValidationErrors) {
