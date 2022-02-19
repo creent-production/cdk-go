@@ -7,20 +7,22 @@ import (
 )
 
 var (
-	Default  = "Invalid value."
-	Required = "Missing data for required field."
-	Email    = "Not a valid email address."
-	Min      = "Shorter than minimum length %s."
-	Max      = "Longer than maximum length %s."
-	Len      = "Length must be equal to %s."
-	Gte      = "Must be greater than or equal to %s."
-	Gt       = "Must be greater than %s."
-	Lte      = "Must be less than or equal to %s."
-	Lt       = "Must be less than %s."
-	Oneof    = "Must be one of: %s."
-	Eqfield  = "Must be equal to %s."
-	Unique   = "Must be unique."
-	Phone    = "Invalid phone number."
+	Default      = "Invalid value."
+	Required     = "Missing data for required field."
+	Email        = "Not a valid email address."
+	Min          = "Shorter than minimum length %s."
+	Max          = "Longer than maximum length %s."
+	Len          = "Length must be equal to %s."
+	Gte          = "Must be greater than or equal to %s."
+	Gt           = "Must be greater than %s."
+	Lte          = "Must be less than or equal to %s."
+	Lt           = "Must be less than %s."
+	Oneof        = "Must be one of: %s."
+	Eqfield      = "Must be equal to %s."
+	Unique       = "Must be unique."
+	Phone        = "Invalid phone number."
+	DateZone     = "Invalid date."
+	DateTimeZone = "Invalid date time."
 )
 
 func SetErrorMessage(ev ErrorValidate) string {
@@ -75,6 +77,10 @@ func SetErrorMessage(ev ErrorValidate) string {
 		return Unique
 	case "phone":
 		return Phone
+	case "datezone":
+		return DateZone
+	case "datetimezone":
+		return DateTimeZone
 	}
 	return Default
 }
