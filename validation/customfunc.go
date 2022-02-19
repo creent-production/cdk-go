@@ -35,12 +35,24 @@ func containsAlpha(s string) bool {
 	return false
 }
 
+func countDigit(s string) int {
+	const digit = "0123456789"
+	count := 0
+	for _, char := range s {
+		if strings.Contains(digit, strings.ToLower(string(char))) {
+			count += 1
+		}
+	}
+	return count
+}
+
 func validateNoIdentity(fl validator.FieldLevel) bool {
 	identity := fl.Field().String()
-	if containsAlpha(identity) {
-		return len(identity) >= 6 && len(identity) <= 16
+	digitSum := countDigit(identity)
+	if containsAlpha(identity) && digitSum < 10 {
+		return len(identity) > 5 && len(identity) < 15 && digitSum >= 4
 	}
-	return len(identity) == 16
+	return digitSum == 16
 }
 
 func validateDateTime(fl validator.FieldLevel, kind string) bool {
