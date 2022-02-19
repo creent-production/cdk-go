@@ -23,6 +23,7 @@ var (
 	Phone        = "Invalid phone number."
 	DateZone     = "Invalid date."
 	DateTimeZone = "Invalid date time."
+	NoIdentity   = "Invalid NIK/NIORA."
 )
 
 func SetErrorMessage(ev ErrorValidate) string {
@@ -81,6 +82,8 @@ func SetErrorMessage(ev ErrorValidate) string {
 		return DateZone
 	case "datetimezone":
 		return DateTimeZone
+	case "noidentity":
+		return NoIdentity
 	}
 	return Default
 }
