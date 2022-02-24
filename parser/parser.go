@@ -3,6 +3,7 @@ package parser
 import (
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 func ParsePathToInt(regex, path string) (int, error) {
@@ -34,6 +35,23 @@ func ParseSliceStrToSliceInt(values []string) ([]int, error) {
 
 	for i := range values {
 		integer, err := strconv.Atoi(values[i])
+		if err != nil {
+			return []int{}, err
+		}
+		valuesInt = append(valuesInt, integer)
+	}
+
+	return valuesInt, nil
+}
+
+func ParseSliceUint8ToSliceInt(values []uint8) ([]int, error) {
+	r := regexp.MustCompile(`[0-9,]`)
+	matches := r.FindAllString(string(values), -1)
+
+	valuesInt := []int{}
+	data := strings.Split(strings.Join(matches, ""), ",")
+	for _, i := range data {
+		integer, err := strconv.Atoi(i)
 		if err != nil {
 			return []int{}, err
 		}
