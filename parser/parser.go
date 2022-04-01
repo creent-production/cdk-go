@@ -19,6 +19,16 @@ func ParsePathToInt(regex, path string) (int, error) {
 	return result, nil
 }
 
+func ParsePathToStr(regex, path string) (string, error) {
+	re, err := regexp.Compile(regex)
+	if err != nil {
+		return "", err
+	}
+	values := re.FindStringSubmatch(path)
+
+	return values[1], nil
+}
+
 func ParseSliceIntToSliceStr(values []int) []string {
 	valuesText := []string{}
 
