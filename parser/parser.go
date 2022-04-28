@@ -70,3 +70,10 @@ func ParseSliceUint8ToSliceInt(values []uint8) ([]int, error) {
 
 	return valuesInt, nil
 }
+
+func ParseSliceUint8ToSliceStr(values []uint8) []string {
+	r := regexp.MustCompile(`[^{}]+`)
+	matches := r.FindAllString(string(values), -1)
+
+	return strings.Split(strings.Join(matches, ""), ",")
+}
