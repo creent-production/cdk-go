@@ -77,3 +77,7 @@ func ParseSliceUint8ToSliceStr(values []uint8) []string {
 
 	return strings.Split(strings.Join(matches, ""), ",")
 }
+
+func RemoveIndexStr(s []string, index int) []string {
+	return append(s[:index], s[index+1:]...)
+}
