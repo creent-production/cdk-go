@@ -85,8 +85,12 @@ func validateDateTime(fl validator.FieldLevel, kind string) bool {
 		return false
 	}
 
-	//set timezone,
+	//set timezone
 	now := time.Now().In(loc)
+	if kind == "date" {
+		now, _ = time.Parse(layoutFormat, now.Format(layoutFormat))
+		date, _ = time.Parse(layoutFormat, date.Format(layoutFormat))
+	}
 
 	switch param[1] {
 	case "lt":
@@ -102,6 +106,46 @@ func validateDateTime(fl validator.FieldLevel, kind string) bool {
 	}
 }
 
+func validateDateTimeField(fl validator.FieldLevel, kind string) bool {
+	param := strings.Split(fl.Param(), "-")
+	if len(param) != 2 {
+		return false
+	}
+
+	field := fl.Top().FieldByName(param[1])
+	if !field.IsValid() {
+		return false
+	}
+
+	layoutFormat := "2006-01-02 15:04:05"
+	if kind == "date" {
+		layoutFormat = "2006-01-02"
+	}
+
+	currentDate, err := time.Parse(layoutFormat, fl.Field().String())
+	if err != nil {
+		return false
+	}
+
+	date, err := time.Parse(layoutFormat, field.String())
+	if err != nil {
+		return false
+	}
+
+	switch param[0] {
+	case "lt":
+		return currentDate.Unix() < date.Unix()
+	case "lte":
+		return currentDate.Unix() <= date.Unix()
+	case "gt":
+		return currentDate.Unix() > date.Unix()
+	case "gte":
+		return currentDate.Unix() >= date.Unix()
+	default:
+		return false
+	}
+}
+
 func validateDateZone(fl validator.FieldLevel) bool {
 	return validateDateTime(fl, "date")
 }
@@ -110,7 +154,17 @@ func validateDateTimeZone(fl validator.FieldLevel) bool {
 	return validateDateTime(fl, "datetime")
 }
 
+func validateDateZoneField(fl validator.FieldLevel) bool {
+	return validateDateTimeField(fl, "date")
+}
+
+func validateDateTimeZoneField(fl validator.FieldLevel) bool {
+	return validateDateTimeField(fl, "datetime")
+}
+
 func registerValidation(validate *validator.Validate) {
+	validate.RegisterValidation("datefield", validateDateZoneField)
+	validate.RegisterValidation("datetimefield", validateDateTimeZoneField)
 	validate.RegisterValidation("phone", validatePhoneNumber)
 	validate.RegisterValidation("datezone", validateDateZone)
 	validate.RegisterValidation("datetimezone", validateDateTimeZone)

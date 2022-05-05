@@ -79,8 +79,56 @@ func SetErrorMessage(ev ErrorValidate) string {
 	case "phone":
 		return Phone
 	case "datezone":
+		param := strings.Split(ev.Param, "-")
+		switch param[1] {
+		case "lt":
+			return fmt.Sprintf(Lt, "date now")
+		case "lte":
+			return fmt.Sprintf(Lte, "date now")
+		case "gt":
+			return fmt.Sprintf(Gt, "date now")
+		case "gte":
+			return fmt.Sprintf(Gte, "date now")
+		}
 		return DateZone
 	case "datetimezone":
+		param := strings.Split(ev.Param, "-")
+		switch param[1] {
+		case "lt":
+			return fmt.Sprintf(Lt, "date time now")
+		case "lte":
+			return fmt.Sprintf(Lte, "date time now")
+		case "gt":
+			return fmt.Sprintf(Gt, "date time now")
+		case "gte":
+			return fmt.Sprintf(Gte, "date time now")
+		}
+		return DateTimeZone
+	case "datefield":
+		param := strings.Split(ev.Param, "-")
+		switch param[0] {
+		case "lt":
+			return fmt.Sprintf(Lt, ToSnakeCase(param[1]))
+		case "lte":
+			return fmt.Sprintf(Lte, ToSnakeCase(param[1]))
+		case "gt":
+			return fmt.Sprintf(Gt, ToSnakeCase(param[1]))
+		case "gte":
+			return fmt.Sprintf(Gte, ToSnakeCase(param[1]))
+		}
+		return DateZone
+	case "datetimefield":
+		param := strings.Split(ev.Param, "-")
+		switch param[0] {
+		case "lt":
+			return fmt.Sprintf(Lt, ToSnakeCase(param[1]))
+		case "lte":
+			return fmt.Sprintf(Lte, ToSnakeCase(param[1]))
+		case "gt":
+			return fmt.Sprintf(Gt, ToSnakeCase(param[1]))
+		case "gte":
+			return fmt.Sprintf(Gte, ToSnakeCase(param[1]))
+		}
 		return DateTimeZone
 	case "noidentity":
 		return NoIdentity
