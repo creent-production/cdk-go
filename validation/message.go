@@ -23,6 +23,7 @@ var (
 	Phone        = "Invalid phone number."
 	DateZone     = "Invalid date."
 	DateTimeZone = "Invalid date time."
+	Time         = "Invalid time."
 	NoIdentity   = "Invalid NIK/NIORA."
 )
 
@@ -130,6 +131,21 @@ func SetErrorMessage(ev ErrorValidate) string {
 			return fmt.Sprintf(Gte, ToSnakeCase(param[1]))
 		}
 		return DateTimeZone
+	case "timefield":
+		param := strings.Split(ev.Param, "-")
+		switch param[0] {
+		case "lt":
+			return fmt.Sprintf(Lt, ToSnakeCase(param[1]))
+		case "lte":
+			return fmt.Sprintf(Lte, ToSnakeCase(param[1]))
+		case "gt":
+			return fmt.Sprintf(Gt, ToSnakeCase(param[1]))
+		case "gte":
+			return fmt.Sprintf(Gte, ToSnakeCase(param[1]))
+		}
+		return Time
+	case "time":
+		return Time
 	case "noidentity":
 		return NoIdentity
 	}

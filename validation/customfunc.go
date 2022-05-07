@@ -162,7 +162,57 @@ func validateDateTimeZoneField(fl validator.FieldLevel) bool {
 	return validateDateTimeField(fl, "datetime")
 }
 
+func validateTime(fl validator.FieldLevel) bool {
+	layoutFormat := "15:04:05"
+
+	_, err := time.Parse(layoutFormat, fl.Field().String())
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
+func validateTimeField(fl validator.FieldLevel) bool {
+	param := strings.Split(fl.Param(), "-")
+	if len(param) != 2 {
+		return false
+	}
+
+	field := fl.Top().FieldByName(param[1])
+	if !field.IsValid() {
+		return false
+	}
+
+	layoutFormat := "15:04:05"
+
+	currentTime, err := time.Parse(layoutFormat, fl.Field().String())
+	if err != nil {
+		return false
+	}
+
+	times, err := time.Parse(layoutFormat, field.String())
+	if err != nil {
+		return false
+	}
+
+	switch param[0] {
+	case "lt":
+		return currentTime.Unix() < times.Unix()
+	case "lte":
+		return currentTime.Unix() <= times.Unix()
+	case "gt":
+		return currentTime.Unix() > times.Unix()
+	case "gte":
+		return currentTime.Unix() >= times.Unix()
+	default:
+		return false
+	}
+}
+
 func registerValidation(validate *validator.Validate) {
+	validate.RegisterValidation("time", validateTime)
+	validate.RegisterValidation("timefield", validateTimeField)
 	validate.RegisterValidation("datefield", validateDateZoneField)
 	validate.RegisterValidation("datetimefield", validateDateTimeZoneField)
 	validate.RegisterValidation("phone", validatePhoneNumber)
