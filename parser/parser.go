@@ -2,6 +2,7 @@ package parser
 
 import (
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -80,4 +81,20 @@ func ParseSliceUint8ToSliceStr(values []uint8) []string {
 
 func RemoveIndexStr(s []string, index int) []string {
 	return append(s[:index], s[index+1:]...)
+}
+
+func CompareTwoSliceStr(one, two []string) bool {
+	if len(one) != len(two) {
+		return false
+	}
+	// sort slice
+	sort.Strings(one)
+	sort.Strings(two)
+
+	for i := range one {
+		if one[i] != two[i] {
+			return false
+		}
+	}
+	return true
 }
