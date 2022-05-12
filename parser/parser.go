@@ -98,3 +98,59 @@ func CompareTwoSliceStr(one, two []string) bool {
 	}
 	return true
 }
+
+func CompareTwoSliceInt(one, two []int) bool {
+	if len(one) != len(two) {
+		return false
+	}
+	// sort slice
+	sort.Ints(one)
+	sort.Ints(two)
+
+	for i := range one {
+		if one[i] != two[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func DifferenceStrFoundOrNot(a, b []string, f bool) []string {
+	mb := make(map[string]struct{}, len(b))
+	for _, x := range b {
+		mb[x] = struct{}{}
+	}
+	var diff []string
+	for _, x := range a {
+		if f {
+			if _, found := mb[x]; found {
+				diff = append(diff, x)
+			}
+		} else {
+			if _, found := mb[x]; !found {
+				diff = append(diff, x)
+			}
+		}
+	}
+	return diff
+}
+
+func DifferenceIntFoundOrNot(a, b []int, f bool) []int {
+	mb := make(map[int]struct{}, len(b))
+	for _, x := range b {
+		mb[x] = struct{}{}
+	}
+	var diff []int
+	for _, x := range a {
+		if f {
+			if _, found := mb[x]; found {
+				diff = append(diff, x)
+			}
+		} else {
+			if _, found := mb[x]; !found {
+				diff = append(diff, x)
+			}
+		}
+	}
+	return diff
+}
