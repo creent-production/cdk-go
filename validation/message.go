@@ -29,7 +29,7 @@ var (
 
 func SetErrorMessage(ev ErrorValidate) string {
 	switch ev.Tag {
-	case "required", "required_with":
+	case "required", "required_with", "required_if":
 		return Required
 	case "email":
 		return Email
