@@ -107,6 +107,10 @@ func validateDateTime(fl validator.FieldLevel, kind string) bool {
 }
 
 func validateDateTimeField(fl validator.FieldLevel, kind string) bool {
+	if len(fl.Field().String()) < 1 {
+		return true
+	}
+
 	param := strings.Split(fl.Param(), "-")
 	if len(param) != 2 {
 		return false
@@ -174,6 +178,10 @@ func validateTime(fl validator.FieldLevel) bool {
 }
 
 func validateTimeField(fl validator.FieldLevel) bool {
+	if len(fl.Field().String()) < 1 {
+		return true
+	}
+
 	param := strings.Split(fl.Param(), "-")
 	if len(param) != 2 {
 		return false
@@ -212,11 +220,11 @@ func validateTimeField(fl validator.FieldLevel) bool {
 
 func registerValidation(validate *validator.Validate) {
 	validate.RegisterValidation("time", validateTime)
+	validate.RegisterValidation("datezone", validateDateZone)
+	validate.RegisterValidation("datetimezone", validateDateTimeZone)
 	validate.RegisterValidation("timefield", validateTimeField)
 	validate.RegisterValidation("datefield", validateDateZoneField)
 	validate.RegisterValidation("datetimefield", validateDateTimeZoneField)
 	validate.RegisterValidation("phone", validatePhoneNumber)
-	validate.RegisterValidation("datezone", validateDateZone)
-	validate.RegisterValidation("datetimezone", validateDateTimeZone)
 	validate.RegisterValidation("noidentity", validateNoIdentity)
 }
