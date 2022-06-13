@@ -24,6 +24,8 @@ var (
 	DateZone     = "Invalid date."
 	DateTimeZone = "Invalid date time."
 	Time         = "Invalid time."
+	Number       = "Invalid number."
+	Numeric      = "Invalid numeric."
 	NoIdentity   = "Invalid NIK/NIORA."
 )
 
@@ -148,6 +150,10 @@ func SetErrorMessage(ev ErrorValidate) string {
 		return Time
 	case "noidentity":
 		return NoIdentity
+	case "numeric":
+		return Numeric
+	case "number":
+		return Number
 	}
 	return Default
 }
