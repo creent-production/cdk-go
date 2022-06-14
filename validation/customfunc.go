@@ -55,6 +55,56 @@ func validateNoIdentity(fl validator.FieldLevel) bool {
 	return digitSum == 16
 }
 
+func validateDateTimeRange(fl validator.FieldLevel, kind string) bool {
+	param := strings.Split(fl.Param(), "-")
+	if len(param) != 3 {
+		return false
+	}
+
+	var timezone string
+	switch param[0] {
+	case "wib":
+		timezone = "Asia/Jakarta"
+	case "wita":
+		timezone = "Asia/Ujung_Pandang"
+	case "wit":
+		timezone = "Asia/Jayapura"
+	default:
+		return false
+	}
+
+	//init the loc
+	loc, _ := time.LoadLocation(timezone)
+
+	layoutFormat := "2006-01-02 15:04:05"
+	if kind == "date" {
+		layoutFormat = "2006-01-02"
+	}
+	date, err := time.ParseInLocation(layoutFormat, fl.Field().String(), loc)
+	if err != nil {
+		return false
+	}
+
+	//set timezone
+	now := time.Now().In(loc)
+	if kind == "date" {
+		now, _ = time.Parse(layoutFormat, now.Format(layoutFormat))
+		date, _ = time.Parse(layoutFormat, date.Format(layoutFormat))
+	}
+
+	durBefore, err := time.ParseDuration(param[1])
+	if err != nil {
+		return false
+	}
+
+	durAfter, err := time.ParseDuration(param[2])
+	if err != nil {
+		return false
+	}
+
+	return now.Add(-durBefore).Unix() <= date.Unix() && now.Add(durAfter).Unix() >= date.Unix()
+}
+
 func validateDateTime(fl validator.FieldLevel, kind string) bool {
 	param := strings.Split(fl.Param(), "-")
 	if len(param) != 2 {
@@ -101,6 +151,8 @@ func validateDateTime(fl validator.FieldLevel, kind string) bool {
 		return date.Unix() > now.Unix()
 	case "gte":
 		return date.Unix() >= now.Unix()
+	case "none":
+		return true
 	default:
 		return false
 	}
@@ -148,6 +200,14 @@ func validateDateTimeField(fl validator.FieldLevel, kind string) bool {
 	default:
 		return false
 	}
+}
+
+func validateDateZoneRange(fl validator.FieldLevel) bool {
+	return validateDateTimeRange(fl, "date")
+}
+
+func validateDateTimeZoneRange(fl validator.FieldLevel) bool {
+	return validateDateTimeRange(fl, "datetime")
 }
 
 func validateDateZone(fl validator.FieldLevel) bool {
@@ -222,6 +282,8 @@ func registerValidation(validate *validator.Validate) {
 	validate.RegisterValidation("time", validateTime)
 	validate.RegisterValidation("datezone", validateDateZone)
 	validate.RegisterValidation("datetimezone", validateDateTimeZone)
+	validate.RegisterValidation("datezonerange", validateDateZoneRange)
+	validate.RegisterValidation("datetimezonerange", validateDateTimeZoneRange)
 	validate.RegisterValidation("timefield", validateTimeField)
 	validate.RegisterValidation("datefield", validateDateZoneField)
 	validate.RegisterValidation("datetimefield", validateDateTimeZoneField)

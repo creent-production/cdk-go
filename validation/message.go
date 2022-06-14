@@ -7,30 +7,34 @@ import (
 )
 
 var (
-	Default      = "Invalid value."
-	Required     = "Missing data for required field."
-	Email        = "Not a valid email address."
-	Min          = "Shorter than minimum length %s."
-	Max          = "Longer than maximum length %s."
-	Len          = "Length must be equal to %s."
-	Gte          = "Must be greater than or equal to %s."
-	Gt           = "Must be greater than %s."
-	Lte          = "Must be less than or equal to %s."
-	Lt           = "Must be less than %s."
-	Oneof        = "Must be one of: %s."
-	Eqfield      = "Must be equal to %s."
-	Unique       = "Must be unique."
-	Phone        = "Invalid phone number."
-	DateZone     = "Invalid date."
-	DateTimeZone = "Invalid date time."
-	Time         = "Invalid time."
-	Number       = "Invalid number."
-	Numeric      = "Invalid numeric."
-	NoIdentity   = "Invalid NIK/NIORA."
+	Default           = "Invalid value."
+	Required          = "Missing data for required field."
+	Email             = "Not a valid email address."
+	Min               = "Shorter than minimum length %s."
+	Max               = "Longer than maximum length %s."
+	Len               = "Length must be equal to %s."
+	Gte               = "Must be greater than or equal to %s."
+	Gt                = "Must be greater than %s."
+	Lte               = "Must be less than or equal to %s."
+	Lt                = "Must be less than %s."
+	Oneof             = "Must be one of: %s."
+	Eqfield           = "Must be equal to %s."
+	Unique            = "Must be unique."
+	Phone             = "Invalid phone number."
+	DateZone          = "Invalid date."
+	DateTimeZone      = "Invalid date time."
+	DateTimeZoneRange = "Must be between range (now - %s) until (now + %s)."
+	Time              = "Invalid time."
+	Number            = "Invalid number."
+	Numeric           = "Invalid numeric."
+	NoIdentity        = "Invalid NIK/NIORA."
 )
 
 func SetErrorMessage(ev ErrorValidate) string {
 	switch ev.Tag {
+	case "datezonerange", "datetimezonerange":
+		param := strings.Split(ev.Param, "-")
+		return fmt.Sprintf(DateTimeZoneRange, param[1], param[2])
 	case "required", "required_with", "required_if":
 		return Required
 	case "email":
