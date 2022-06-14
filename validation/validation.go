@@ -1,7 +1,6 @@
 package validation
 
 import (
-	"reflect"
 	"regexp"
 	"strings"
 
@@ -14,10 +13,6 @@ import (
 var decoder = schema.NewDecoder()
 
 func ParseRequest(dst interface{}, src map[string][]string) error {
-	decoder.RegisterConverter([]string{}, func(input string) reflect.Value {
-		return reflect.ValueOf(strings.Split(input, ","))
-	})
-
 	return decoder.Decode(dst, src)
 }
 
