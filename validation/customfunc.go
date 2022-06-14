@@ -105,6 +105,62 @@ func validateDateTimeRange(fl validator.FieldLevel, kind string) bool {
 	return now.Add(-durBefore).Unix() <= date.Unix() && now.Add(durAfter).Unix() >= date.Unix()
 }
 
+func validateDateTimeDuration(fl validator.FieldLevel, kind string) bool {
+	param := strings.Split(fl.Param(), "-")
+	if len(param) != 3 {
+		return false
+	}
+
+	var timezone string
+	switch param[0] {
+	case "wib":
+		timezone = "Asia/Jakarta"
+	case "wita":
+		timezone = "Asia/Ujung_Pandang"
+	case "wit":
+		timezone = "Asia/Jayapura"
+	default:
+		return false
+	}
+
+	//init the loc
+	loc, _ := time.LoadLocation(timezone)
+
+	layoutFormat := "2006-01-02 15:04:05"
+	if kind == "date" {
+		layoutFormat = "2006-01-02"
+	}
+	date, err := time.ParseInLocation(layoutFormat, fl.Field().String(), loc)
+	if err != nil {
+		return false
+	}
+
+	//set timezone
+	now := time.Now().In(loc)
+	if kind == "date" {
+		now, _ = time.Parse(layoutFormat, now.Format(layoutFormat))
+		date, _ = time.Parse(layoutFormat, date.Format(layoutFormat))
+	}
+
+	dur, err := time.ParseDuration(param[2])
+	if err != nil {
+		return false
+	}
+
+	switch param[1] {
+	case "lt":
+		return date.Unix() < now.Add(-dur).Unix()
+	case "lte":
+		return date.Unix() <= now.Add(-dur).Unix()
+	case "gt":
+		return date.Unix() > now.Add(dur).Unix()
+	case "gte":
+		return date.Unix() >= now.Add(dur).Unix()
+	default:
+		return false
+	}
+}
+
 func validateDateTime(fl validator.FieldLevel, kind string) bool {
 	param := strings.Split(fl.Param(), "-")
 	if len(param) != 2 {
@@ -202,6 +258,14 @@ func validateDateTimeField(fl validator.FieldLevel, kind string) bool {
 	}
 }
 
+func validateDateZoneDuration(fl validator.FieldLevel) bool {
+	return validateDateTimeDuration(fl, "date")
+}
+
+func validateDateTimeZoneDuration(fl validator.FieldLevel) bool {
+	return validateDateTimeDuration(fl, "datetime")
+}
+
 func validateDateZoneRange(fl validator.FieldLevel) bool {
 	return validateDateTimeRange(fl, "date")
 }
@@ -282,6 +346,8 @@ func registerValidation(validate *validator.Validate) {
 	validate.RegisterValidation("time", validateTime)
 	validate.RegisterValidation("datezone", validateDateZone)
 	validate.RegisterValidation("datetimezone", validateDateTimeZone)
+	validate.RegisterValidation("datezoneduration", validateDateZoneDuration)
+	validate.RegisterValidation("datetimezoneduration", validateDateTimeZoneDuration)
 	validate.RegisterValidation("datezonerange", validateDateZoneRange)
 	validate.RegisterValidation("datetimezonerange", validateDateTimeZoneRange)
 	validate.RegisterValidation("timefield", validateTimeField)

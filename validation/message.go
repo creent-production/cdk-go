@@ -34,6 +34,14 @@ func SetErrorMessage(ev ErrorValidate) string {
 	switch ev.Tag {
 	case "datezonerange", "datetimezonerange":
 		param := strings.Split(ev.Param, "-")
+		if len(param) != 3 {
+			switch ev.Tag {
+			case "datezonerange":
+				return DateZone
+			case "datetimezonerange":
+				return DateTimeZone
+			}
+		}
 		return fmt.Sprintf(DateTimeZoneRange, param[1], param[2])
 	case "required", "required_with", "required_if":
 		return Required
@@ -85,6 +93,27 @@ func SetErrorMessage(ev ErrorValidate) string {
 		return Unique
 	case "phone":
 		return Phone
+	case "datezoneduration", "datetimezoneduration":
+		param := strings.Split(ev.Param, "-")
+		if len(param) == 3 {
+			switch param[1] {
+			case "lt":
+				return fmt.Sprintf(Lt, fmt.Sprintf("(now - %s)", param[2]))
+			case "lte":
+				return fmt.Sprintf(Lte, fmt.Sprintf("(now - %s)", param[2]))
+			case "gt":
+				return fmt.Sprintf(Gt, fmt.Sprintf("(now + %s)", param[2]))
+			case "gte":
+				return fmt.Sprintf(Gte, fmt.Sprintf("(now + %s)", param[2]))
+			}
+		}
+
+		switch ev.Tag {
+		case "datezoneduration":
+			return DateZone
+		case "datetimezoneduration":
+			return DateTimeZone
+		}
 	case "datezone":
 		param := strings.Split(ev.Param, "-")
 		switch param[1] {
