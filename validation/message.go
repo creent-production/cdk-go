@@ -28,10 +28,13 @@ var (
 	Number            = "Invalid number."
 	Numeric           = "Invalid numeric."
 	NoIdentity        = "Invalid NIK/NIORA."
+	PathFile          = "Value is not a valid path."
 )
 
 func SetErrorMessage(ev ErrorValidate) string {
 	switch ev.Tag {
+	case "pathfilestatic":
+		return PathFile
 	case "datezonerange", "datetimezonerange":
 		param := strings.Split(ev.Param, "-")
 		if len(param) != 3 {

@@ -9,12 +9,18 @@ import (
 )
 
 const (
-	phoneIdRegexString = "^(\\+62|62|0)8[1-9][0-9]{6,9}$"
+	phoneIdRegexString        = "^(\\+62|62|0)8[1-9][0-9]{6,9}$"
+	pathFileStaticRegexString = "^.*static.*$"
 )
 
 var (
-	phoneIdRegex = regexp.MustCompile(phoneIdRegexString)
+	phoneIdRegex        = regexp.MustCompile(phoneIdRegexString)
+	pathFileStaticRegex = regexp.MustCompile(pathFileStaticRegexString)
 )
+
+func validatePathFileStatic(fl validator.FieldLevel) bool {
+	return pathFileStaticRegex.MatchString(fl.Field().String())
+}
 
 func validatePhoneNumber(fl validator.FieldLevel) bool {
 	switch fl.Param() {
@@ -355,4 +361,5 @@ func registerValidation(validate *validator.Validate) {
 	validate.RegisterValidation("datetimefield", validateDateTimeZoneField)
 	validate.RegisterValidation("phone", validatePhoneNumber)
 	validate.RegisterValidation("noidentity", validateNoIdentity)
+	validate.RegisterValidation("pathfilestatic", validatePathFileStatic)
 }
