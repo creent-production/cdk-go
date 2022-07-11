@@ -155,7 +155,7 @@ func DifferenceIntFoundOrNot(a, b []int, f bool) []int {
 	return diff
 }
 
-func removeDuplicateStr(strSlice []string) []string {
+func RemoveDuplicateStr(strSlice []string) []string {
 	allKeys := make(map[string]bool)
 	list := []string{}
 	for _, item := range strSlice {
@@ -167,7 +167,7 @@ func removeDuplicateStr(strSlice []string) []string {
 	return list
 }
 
-func removeDuplicateInt(intSlice []int) []int {
+func RemoveDuplicateInt(intSlice []int) []int {
 	allKeys := make(map[int]bool)
 	list := []int{}
 	for _, item := range intSlice {
